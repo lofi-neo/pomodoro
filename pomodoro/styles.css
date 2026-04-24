@@ -61,7 +61,6 @@ body {
 }
 
 .glass-panel:hover {
-    transform: translateY(-8px);
     box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.45);
 }
 
