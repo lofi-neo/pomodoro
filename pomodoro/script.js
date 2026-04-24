@@ -1,6 +1,7 @@
 const WORK_TIME = 25 * 60; // 25 minutes in seconds
 const REST_TIME = 5 * 60; // 5 minutes in seconds
 const SHORTER_REST_TIME = 2 * 60; // 2 minutes in seconds
+const ONE_MIN_REST_TIME = 1 * 60; // 1 minute in seconds
 let currentMode = 'work'; // 'work' or 'rest'
 let timeLeft = WORK_TIME;
 let timerId = null;
@@ -16,6 +17,7 @@ const timerDisplay = document.querySelector('.timer-display');
 const modeWorkBtn = document.getElementById('mode-work');
 const modeRestBtn = document.getElementById('mode-rest');
 const modeShorterRestBtn = document.getElementById('mode-shorter-rest');
+const modeOneMinRestBtn = document.getElementById('mode-one-min-rest');
 
 // Initialize play state
 timerDisplay.classList.add('paused');
@@ -40,7 +42,7 @@ function updateDisplay() {
     secondsElement.textContent = seconds.toString().padStart(2, '0');
 
     // Update slider position and track background
-    const totalTime = currentMode === 'work' ? WORK_TIME : (currentMode === 'rest' ? REST_TIME : SHORTER_REST_TIME);
+    const totalTime = currentMode === 'work' ? WORK_TIME : (currentMode === 'rest' ? REST_TIME : (currentMode === 'shorter-rest' ? SHORTER_REST_TIME : ONE_MIN_REST_TIME));
     timeSlider.value = timeLeft;
     const percentLeft = (displayTime / totalTime) * 100;
     timeSlider.style.background = `linear-gradient(to right, var(--primary-color) 0%, var(--primary-hover) ${percentLeft}%, rgba(255, 255, 255, 0.1) ${percentLeft}%, rgba(255, 255, 255, 0.1) 100%)`;
@@ -105,7 +107,7 @@ function toggleTimer() {
                 // Optional: Automatically reset the timer for the next session
                 // We'll reset it after a small delay to let the user see '00:00'
                 setTimeout(() => {
-                    timeLeft = currentMode === 'work' ? WORK_TIME : (currentMode === 'rest' ? REST_TIME : SHORTER_REST_TIME);
+                    timeLeft = currentMode === 'work' ? WORK_TIME : (currentMode === 'rest' ? REST_TIME : (currentMode === 'shorter-rest' ? SHORTER_REST_TIME : ONE_MIN_REST_TIME));
                     updateDisplay();
                 }, 3000);
             }
@@ -115,7 +117,7 @@ function toggleTimer() {
 
 function resetTimer() {
     clearInterval(timerId);
-    timeLeft = currentMode === 'work' ? WORK_TIME : (currentMode === 'rest' ? REST_TIME : SHORTER_REST_TIME);
+    timeLeft = currentMode === 'work' ? WORK_TIME : (currentMode === 'rest' ? REST_TIME : (currentMode === 'shorter-rest' ? SHORTER_REST_TIME : ONE_MIN_REST_TIME));
     isRunning = false;
     startBtn.textContent = 'Start';
     timerDisplay.classList.add('paused');
@@ -134,6 +136,7 @@ function setMode(mode) {
     modeWorkBtn.classList.remove('active');
     modeRestBtn.classList.remove('active');
     modeShorterRestBtn.classList.remove('active');
+    modeOneMinRestBtn.classList.remove('active');
 
     if (mode === 'work') {
         timeLeft = WORK_TIME;
@@ -147,6 +150,10 @@ function setMode(mode) {
         timeLeft = SHORTER_REST_TIME;
         timeSlider.max = SHORTER_REST_TIME;
         modeShorterRestBtn.classList.add('active');
+    } else if (mode === 'one-min-rest') {
+        timeLeft = ONE_MIN_REST_TIME;
+        timeSlider.max = ONE_MIN_REST_TIME;
+        modeOneMinRestBtn.classList.add('active');
     }
     updateDisplay();
 }
@@ -156,6 +163,7 @@ resetBtn.addEventListener('click', resetTimer);
 modeWorkBtn.addEventListener('click', () => setMode('work'));
 modeRestBtn.addEventListener('click', () => setMode('rest'));
 modeShorterRestBtn.addEventListener('click', () => setMode('shorter-rest'));
+modeOneMinRestBtn.addEventListener('click', () => setMode('one-min-rest'));
 
 timeSlider.addEventListener('input', (e) => {
     timeLeft = parseInt(e.target.value);
