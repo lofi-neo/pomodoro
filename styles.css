@@ -1,5 +1,5 @@
 :root {
-    --bg-gradient: red;
+    --bg-gradient: linear-gradient(135deg, #241e1c, #1f2f3d, #2d4554);
     --glass-bg: rgba(94, 60, 43, 0.25);
     --glass-border: rgba(255, 255, 255, 0.1);
     --text-primary: #ffffff;
